@@ -134,10 +134,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="CheckButton.cpp" />
+    <ClCompile Include="Label.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Graph.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
+    <ClInclude Include="Button.h" />
+    <ClInclude Include="Camera.hpp" />
+    <ClInclude Include="CheckButton.h" />
+    <ClInclude Include="ExtraColors.hpp" />
+    <ClInclude Include="GObject.hpp" />
+    <ClInclude Include="Label.h" />
+    <ClInclude Include="Graph.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
