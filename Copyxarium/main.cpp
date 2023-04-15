@@ -129,10 +129,53 @@ int main()
     lab.addHBoxSeparate();
     
     lab.addHBoxSeparate("Area:");
-    lab.addHBoxSeparate("1. Sline = " + std::to_string(a_line));
-    lab.addHBoxSeparate("2. Spara = " + std::to_string(a_para));
-    lab.addHBoxSeparate("3. Scubi = " + std::to_string(a_cubi));
-    lab.addHBoxSeparate("4. Slagr = " + std::to_string(a_lagr));
+    lab.addHBoxSeparate("1. S line = " + std::to_string(a_line));
+    lab.addHBoxSeparate("2. S para = " + std::to_string(a_para));
+    lab.addHBoxSeparate("3. S cubi = " + std::to_string(a_cubi));
+    lab.addHBoxSeparate("4. S lagr = " + std::to_string(a_lagr));
+    lab.addHBoxSeparate();
+
+    lab.addHBoxSeparate("Equals:");
+
+
+    std::string equals_ = "1. line = ";
+    
+    auto append = [&equals_](axis_vec ratio)
+    {
+        for (int i = 0; i < ratio.size(); ++i)
+        {
+            equals_ += std::to_string(ratio[i]);
+            if (i > 1)
+                equals_ += "x^" + std::to_string(i);
+            else if (i == 1)
+                equals_ += "x";
+            if (i < ratio.size() - 1)
+                equals_ += " + ";
+        }
+    };
+    append(lin_ratio);
+    equals_ += "\n2. para = ";
+    append(par_ratio);
+    equals_ += "\n3. cubi = ";
+    append(cub_ratio);
+    equals_ += "\n4. lagr = ";
+    append(lagrange_ratio);
+
+    std::cout << equals_ << std::endl;
+
+
+    lab.addHBoxSeparate("1. line = " + std::to_string(lin_ratio[1]) + "x + " + std::to_string(lin_ratio[0]));
+    lab.addHBoxSeparate("2. para = " + std::to_string(par_ratio[2]) + "x^2 + " + std::to_string(par_ratio[1]) + "x + " + std::to_string(par_ratio[0]));
+    lab.addHBoxSeparate("3. cubi = " + std::to_string(cub_ratio[3]) + "x^3 + " + std::to_string(cub_ratio[2]) + "x^2 + " + std::to_string(cub_ratio[1]) + "x + " + std::to_string(cub_ratio[0]));
+    lab.addHBoxSeparate("4. lagr = " + std::to_string(a_lagr));
+
+
+    
+
+
+
+
+
     while (lab.isOpen())
     {
         lab.update();

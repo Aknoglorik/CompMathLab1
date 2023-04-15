@@ -268,13 +268,13 @@ void App::render()
     root.setView(default_view);
 
     // hud
-    sf::RectangleShape hud_background(sf::Vector2f(HUD_WIDTH, VM.height));
+    sf::RectangleShape hud_background(sf::Vector2f(HUD_WIDTH, root.getSize().y));
     hud_background.setFillColor(gui::Color::DarkGray);
     hud_background.setPosition(default_view.getSize().x - HUD_WIDTH, 0);
     root.draw(hud_background);
 
     // status bar
-    sf::RectangleShape sbar_background(sf::Vector2f(VM.width, STATBAR_HEIGHT));
+    sf::RectangleShape sbar_background(sf::Vector2f(root.getSize().x, STATBAR_HEIGHT));
     sbar_background.setFillColor(sf::Color::White);
     sbar_background.setPosition(0, default_view.getSize().y - STATBAR_HEIGHT);
     root.draw(sbar_background);
