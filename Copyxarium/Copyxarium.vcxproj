@@ -137,8 +137,13 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="CheckButton.cpp" />
     <ClCompile Include="Label.cpp" />
+    <ClCompile Include="LagrangePolynom.cpp" />
+    <ClCompile Include="LSqMrealisation.cpp" />
+    <ClCompile Include="LSqMrealisation.hpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Graph.cpp" />
+    <ClCompile Include="SimpsonArea.h" />
+    <ClCompile Include="Slider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
@@ -149,6 +154,9 @@
     <ClInclude Include="GObject.hpp" />
     <ClInclude Include="Label.h" />
     <ClInclude Include="Graph.h" />
+    <ClInclude Include="LagrangePolynom.h" />
+    <ClInclude Include="mainDecl.h" />
+    <ClInclude Include="Slider.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
