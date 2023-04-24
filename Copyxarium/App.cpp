@@ -78,31 +78,58 @@ void App::initVariables()
     gui::Label* lb;
 
     // Sliders
-    {
-    pos = sf::Vector2f(-CBTN_HOR_POS, hud_hbox_height * CBTN_DEL + HUD_MARGIN); // HBox pos
-    ++hud_hbox_height;
+    { // x factor
+        pos = sf::Vector2f(-CBTN_HOR_POS, hud_hbox_height * CBTN_DEL + HUD_MARGIN); // HBox pos
+        ++hud_hbox_height;
 
-    gui::Slider* sld = new gui::Slider(pos, sf::Vector2f(HUD_WIDTH - 2*HUD_MARGIN, HUD_MARGIN), SLD_START_VAL, SLD_MIN_VAL, SLD_MAX_VAL);
+        gui::Slider* sld = new gui::Slider(pos, sf::Vector2f(HUD_WIDTH - 2*HUD_MARGIN, HUD_MARGIN), SLD_START_VAL, SLD_MIN_VAL, SLD_MAX_VAL);
 
-    sld->setValue(1);
-    sld->setAnc(gui::TopRight);
-    sld->bind([this](float x_factor) {this->graph->setFactor(sf::Vector2f(x_factor, this->graph->getFactor().y)); });
+        sld->setValue(1);
+        sld->setAnc(gui::TopRight);
+        sld->bind([this](float x_factor) {this->graph->setFactor(sf::Vector2f(x_factor, this->graph->getFactor().y)); });
 
-    hud_widgets.push_back(sld);
+        hud_widgets.push_back(sld);
 
-    pos = sf::Vector2f(-CBTN_HOR_POS, hud_hbox_height * CBTN_DEL + HUD_MARGIN); // HBox pos
-    ++hud_hbox_height;
+        pos = sf::Vector2f(-CBTN_HOR_POS, hud_hbox_height * CBTN_DEL + HUD_MARGIN); // HBox pos
+        ++hud_hbox_height;
 
-    lb = new gui::Label;
-    lb->setCharSize(LB_FONT_SIZE);
-    lb->setPosition(pos);// sf::Vector2f(STATBAR_MARGIN, -lb->getCharSizeF() - STATBAR_MARGIN));
+        lb = new gui::Label;
+        lb->setCharSize(LB_FONT_SIZE);
+        lb->setPosition(pos);// sf::Vector2f(STATBAR_MARGIN, -lb->getCharSizeF() - STATBAR_MARGIN));
 
-    lb->setFont(font);
-    lb->setDynamicString(d_slider_x_factor);
-    lb->setAnc(gui::TopRight);
-    lb->setColor(gui::Color::DarkRed2);
+        lb->setFont(font);
+        lb->setDynamicString(d_slider_x_factor);
+        lb->setAnc(gui::TopRight);
+        lb->setColor(gui::Color::DarkRed2);
 
-    hud_widgets.push_back(lb);
+        hud_widgets.push_back(lb);
+    }
+
+    { // y factor
+        pos = sf::Vector2f(-CBTN_HOR_POS, hud_hbox_height * CBTN_DEL + HUD_MARGIN); // HBox pos
+        ++hud_hbox_height;
+
+        gui::Slider* sld = new gui::Slider(pos, sf::Vector2f(HUD_WIDTH - 2 * HUD_MARGIN, HUD_MARGIN), SLD_START_VAL, SLD_MIN_VAL, SLD_MAX_VAL);
+
+        sld->setValue(1);
+        sld->setAnc(gui::TopRight);
+        sld->bind([this](float y_factor) {this->graph->setFactor(sf::Vector2f(this->graph->getFactor().x, y_factor)); });
+
+        hud_widgets.push_back(sld);
+
+        pos = sf::Vector2f(-CBTN_HOR_POS, hud_hbox_height * CBTN_DEL + HUD_MARGIN); // HBox pos
+        ++hud_hbox_height;
+
+        lb = new gui::Label;
+        lb->setCharSize(LB_FONT_SIZE);
+        lb->setPosition(pos);// sf::Vector2f(STATBAR_MARGIN, -lb->getCharSizeF() - STATBAR_MARGIN));
+
+        lb->setFont(font);
+        lb->setDynamicString(d_slider_y_factor);
+        lb->setAnc(gui::TopRight);
+        lb->setColor(gui::Color::DarkRed2);
+
+        hud_widgets.push_back(lb);
     }
 
     addHBoxSeparate();
@@ -248,6 +275,7 @@ void App::update()
     d_mouse_pos_y = "y: " + d_mouse_pos_y.substring(0, d_mouse_pos_y.find(".") + 5);
 
     d_slider_x_factor = "x factor = " + std::to_string(graph->getFactor().x);
+    d_slider_y_factor = "y factor = " + std::to_string(graph->getFactor().y);
 
     for (auto wid : widgets)
         wid->update(root);

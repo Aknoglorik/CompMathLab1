@@ -8,7 +8,10 @@
 #include <fstream>
 
 #define POINT_AMOUNT        111
-#define EXTRA_BOUND_PERCENT 0.2f
+//#define EXTRA_BOUND_PERCENT 0.2f
+
+bool is_lagrange_enable = true;
+float EXTRA_BOUND_PERCENT = 0.f;
 
 
 p_vec graph_by_basis(std::vector<_ffunc> basis, axis_vec ratio, float start_point, float end_point, int p_amount)
@@ -40,6 +43,9 @@ p_vec loadPointsFromFile(std::string fname)
     if (!in.is_open())
         return p_vec();
 
+    in >> EXTRA_BOUND_PERCENT;
+    in >> is_lagrange_enable;
+
     int amount;
     in >> amount;
     
@@ -59,7 +65,7 @@ p_vec loadPointsFromFile(std::string fname)
 
 int main()
 {
-    p_vec points =loadPointsFromFile("res/testdata.txt");
+    p_vec points = loadPointsFromFile("res/testdata.txt");
 
     std::vector<_ffunc> basa =
     {
@@ -69,8 +75,12 @@ int main()
         //[](float x)->float { return x * x * x; },             // cubic parabola
     };
 
-    float start = points[0].x                 - std::abs(points[0].x) * EXTRA_BOUND_PERCENT;
-    float end   = points[points.size() - 1].x + std::abs(points[0].x) * EXTRA_BOUND_PERCENT;
+    float start = points[0].x;
+    float end   = points[points.size() - 1].x;
+    float size  = end - start;
+
+    start -= size * EXTRA_BOUND_PERCENT;
+    end   += size * EXTRA_BOUND_PERCENT;
 
     // line
     auto lin_ratio = LSqM_(points, basa);
@@ -86,31 +96,14 @@ int main()
     auto  cub_ratio = LSqM_(points, basa);
     p_vec cub_parabola  = graph_by_basis(basa,      cub_ratio,      start, end, POINT_AMOUNT);
 
-    // Lagrange
-    auto lagrange_ratio = LagrPol(points);
-    std::vector<_ffunc> lag_basis(lagrange_ratio.size());
-
-    int* power = nullptr;
-    for (int i = 0; i < lag_basis.size(); ++i)
-    {
-        power = new int(i);
-        lag_basis[i] = ([power] (float x)->float
-            {
-                return powf(x, *power);
-            }
-        );
-
-    }
-    std::cout << lagrange_ratio << std::endl;
-    p_vec lagrange      = graph_by_basis(lag_basis, lagrange_ratio, start, end, POINT_AMOUNT);
+    // Lagrange was moved down
 
 
     // Simpson
     float a_line = areaByPoints(linear);
     float a_para = areaByPoints(parabola);
     float a_cubi = areaByPoints(cub_parabola);
-    float a_lagr = areaByPoints(lagrange);
-
+    float a_lagr = 0;
 
     // Graphics
 	App lab(1600, 900, "Lab 2");
@@ -123,16 +116,41 @@ int main()
     lab.graphAdd(parabola,     gui::Color::DarkGreen, "parabola"      );
     lab.graphAdd(cub_parabola, gui::Color::DarkRed2,  "cubic parabola");
     lab.addHBoxSeparate();
-    
-    lab.addHBoxSeparate("Lagrange polinomial");
-    lab.graphAdd(lagrange, gui::Color::DarkYellow, "Lagrange");
-    lab.addHBoxSeparate();
+
+    // Lagrange
+    axis_vec lagrange_ratio;
+    if (is_lagrange_enable)
+    {
+        lagrange_ratio = LagrPol(points);
+        std::vector<_ffunc> lag_basis(lagrange_ratio.size());
+
+        int* power = nullptr;
+        for (int i = 0; i < lag_basis.size(); ++i)
+        {
+            power = new int(i);
+            lag_basis[i] = ([power](float x)->float
+                {
+                    return powf(x, *power);
+                }
+            );
+
+        }
+
+        p_vec lagrange = graph_by_basis(lag_basis, lagrange_ratio, start, end, POINT_AMOUNT);
+        a_lagr = areaByPoints(lagrange);
+
+        lab.addHBoxSeparate("Lagrange polinomial");
+        lab.graphAdd(lagrange, gui::Color::DarkYellow, "Lagrange");
+        lab.addHBoxSeparate();
+    }
     
     lab.addHBoxSeparate("Area:");
     lab.addHBoxSeparate("1. S line = " + std::to_string(a_line));
     lab.addHBoxSeparate("2. S para = " + std::to_string(a_para));
     lab.addHBoxSeparate("3. S cubi = " + std::to_string(a_cubi));
-    lab.addHBoxSeparate("4. S lagr = " + std::to_string(a_lagr));
+    if (is_lagrange_enable)
+        lab.addHBoxSeparate("4. S lagr = " + std::to_string(a_lagr));
+    
     lab.addHBoxSeparate();
 
     lab.addHBoxSeparate("Equals:");
@@ -158,8 +176,12 @@ int main()
     append(par_ratio);
     equals_ += "\n3. cubi = ";
     append(cub_ratio);
-    equals_ += "\n4. lagr = ";
-    append(lagrange_ratio);
+
+    if (is_lagrange_enable)
+    {
+        equals_ += "\n4. lagr = ";
+        append(lagrange_ratio);
+    }
 
     std::cout << equals_ << std::endl;
 
